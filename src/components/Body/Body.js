@@ -5,7 +5,7 @@ const Body = ({showData}) => {
   return (
     <div >
     <ul>
-    {showData.map((e)=><li key={e.id}>
+    {showData.map((e)=><li key={e.id} style={{listStyle:'none'}}>
 <h3>{e.title}</h3>
 <p>{e.openingText}</p>
 </li>)} 
