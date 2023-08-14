@@ -5,6 +5,7 @@ import { Button } from 'react-bootstrap';
 const App = () => {
 const [showData, setShowData] = useState([]);
 const [isLoading,setIsLoading] = useState(false);
+const [count,setcount] =useState(0)
 
 async function apirequest(){
   setIsLoading(true)
@@ -14,9 +15,10 @@ async function apirequest(){
   setIsLoading(false)
 
   setShowData(data.results);
+  setcount(count+1)
 
 };
-{console.log('data',showData)}
+{console.log('data',showData,count)}
 
   return (
     <>
