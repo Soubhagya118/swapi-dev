@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Button } from 'react-bootstrap';
 
 
 const App = () => {
@@ -18,10 +19,11 @@ async function apirequest(){
 {console.log('data',showData)}
 
   return (
+    <>
     <div className='container'>
     <div style={{width:'60%',margin:'10px auto',textAlign:'center',}}>
 
-    <button onClick={apirequest}>Fetch Films</button>
+    <Button variant='primary' onClick={apirequest} style={{marginBottom:'10px'}}>Fetch Films</Button>
 
     {isLoading && <h3>Loading...........</h3>}
       { showData?.map((e)=>
@@ -32,6 +34,7 @@ async function apirequest(){
     </div>
      
     </div>
+    </>
   )
 }
 
