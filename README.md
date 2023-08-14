@@ -1,5 +1,6 @@
 # this is a react app (pro-app) i used swapi.dev to get url 
 Here I just use the fetch() 
+# C: shap\reactJs\swapi React\pro-app :--Location of App 
 
 # Getting Started with Create React App
 
