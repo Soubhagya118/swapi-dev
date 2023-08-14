@@ -3,20 +3,16 @@ import React, { useState } from 'react';
 
 const App = () => {
 const [showData, setShowData] = useState([]);
+const [isLoading,setIsLoading] = useState(false);
 
-function apirequest(e){
-  e.preventDefault();
+async function apirequest(){
+  setIsLoading(true)
   
-  fetch("https://swapi.dev/api/films/")
-  .then((res)=>{
-   // console.log("res",res.json())
-  return res.json();
+  const res= await fetch("https://swapi.dev/api/films/")
+  const data = await res.json();  
+  setShowData(data.results);
+  setIsLoading(false)
 
-}).then((data)=>{
-    const data1= data?.results;
-  return setShowData(data1);
-
-  }).catch((err)=>console.log(err))
 };
 {console.log('data',showData)}
 
@@ -25,7 +21,9 @@ function apirequest(e){
     <div style={{width:'60%',margin:'10px auto',textAlign:'center',}}>
 
     <button onClick={apirequest}>Fetch Films</button>
-      {showData?.map((e)=>
+
+    {isLoading && <h3>Loading...........</h3>}
+      { showData?.map((e)=>
       <div  key={e.episode_id}>
       <h4>{e.title}</h4>
       <p>{e.opening_crawl}</p>
