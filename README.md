@@ -1,3 +1,6 @@
+# this is a react app (pro-app) i used swapi.dev to get url 
+Here I just use the fetch() 
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
