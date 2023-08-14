@@ -10,8 +10,9 @@ async function apirequest(){
   
   const res= await fetch("https://swapi.dev/api/films/")
   const data = await res.json();  
-  setShowData(data.results);
   setIsLoading(false)
+
+  setShowData(data.results);
 
 };
 {console.log('data',showData)}
