@@ -1,25 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
 
-function App() {
+
+const App = () => {
+const [showData, setShowData] = useState([]);
+
+function apirequest(e){
+  e.preventDefault();
+  
+  fetch("https://swapi.dev/api/films/")
+  .then((res)=>{
+   // console.log("res",res.json())
+  return res.json();
+
+}).then((data)=>{
+    const data1= data?.results;
+  return setShowData(data1);
+
+  }).catch((err)=>console.log(err))
+};
+{console.log('data',showData)}
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='container'>
+    <div style={{width:'60%',margin:'10px auto',textAlign:'center',}}>
+
+    <button onClick={apirequest}>Fetch Films</button>
+      {showData?.map((e)=>
+      <div  key={e.episode_id}>
+      <h4>{e.title}</h4>
+      <p>{e.opening_crawl}</p>
+      </div>)}
     </div>
-  );
+     
+    </div>
+  )
 }
 
-export default App;
+export default App
