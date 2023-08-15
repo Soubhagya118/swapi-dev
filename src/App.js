@@ -1,123 +1,35 @@
-import React, { useEffect, useState, useCallback,useRef } from 'react';
-import { Button } from 'react-bootstrap';
-import Body from './components/Body/Body';
-
+import React from 'react'
+import MainBody from './components/Body/MainBody'
+import { BrowserRouter,Routes,Route,Link } from 'react-router-dom'
+import About from './components/Body/About'
 
 const App = () => {
-const [showData, setShowData] = useState([]);
-const [isLoading,setIsLoading] = useState(false);
-const [error,setError] = useState(null);
-
-const title=useRef();
-const text=useRef();
-const rDate= useRef();
-
- const apirequest = useCallback( async ()=>{
-  setIsLoading(true);
-  setError(null)
-  try{
-  const response = await fetch('https://swapi.dev/api/films/');
-    if( !response.ok ){
-      throw new Error('....Retrying');
-    };
-    const data = await response.json();  
-    const filmsList=data.results.map((d)=>{
-      return {
-        id:d.episode_id,
-        title:d.title,
-        openingText:d.opening_crawl,
-        releaseDate:d.release_date,
-      }
-    });
-
-    
-  
-    setShowData(filmsList);
-    setError(null)
-  
-  }catch(err){
-      setError(err.message)
-  }
-  setIsLoading(false);
-
-
-},[]
-);
-
-useEffect(()=>{
-
-  apirequest();
-
-}, [apirequest]);
-
-const submitEvent=(e)=>{
-  e.preventDefault();
-  const t1=title.current.value;
-  const ot1 = text.current.value;
-  const r1=rDate.current.value;
-  setShowData((prvData)=> [...prvData,{id:Math.random(),title:t1,openingText:ot1,releaseDate:r1}]);
-  title.current.value='';
-  text.current.value='';
-  rDate.current.value='';
-  
-    
-  }
-
-  const removeFn=(ele)=>{
-    const remove = showData.filter((e)=> e.id !==ele.id);
-    setShowData(remove)
-
-  }
- 
-let content = <p>Found No Movies...</p>
-if(showData.length>0){
-content = <Body style={{windth:'100%'}} removeFn={removeFn} showData={showData}/>
-
-}
-if(error){
-  content=<h2>{error}</h2>
-}
-if(isLoading){
-   content=<h2>Loading.........</h2>
-}
-
-
-
   return (
-    <>
-    <section style={{width:'500px',margin:'auto',marginTop:'20px',border:'1px solid black',padding:'20px'}}>
-<form onSubmit={submitEvent} style={{display:'grid'}}>
-<label htmlFor='title'>Title </label>
-      <input id='title' ref={title}/>
-<br/>
-      <label htmlFor='openingText'>Opening Text</label>
-      <input id='openingText' ref={text} />
-<br/>
-      <label htmlFor='rleasedate'>Release Date</label>
-      <input id='rleasedate' ref={rDate}/>
+    <div style={{width:'100%'}}>
+       <header style={{width:'100%', height:'auto',background:'black',color:'white',position:'sticky',marginTop:'0'}}>
+        <ul style={{width:'200px',margin:'auto',listStyle:'none',display:'flex',gap:'20%',padding:'10px'}}>
         
-      <br/>
-      <button style={{width:'30%',marginLeft:'35%'}}>Add Movie</button>
-</form>
+        <li > <Link to='/' style={{color:'white',textDecoration:'none'}}> Home</Link> </li>
+        <li > <Link to='/about' style={{color:'white',textDecoration:'none'}}> About</Link> </li>
+        </ul>
+      </header>
+      <section>
      
-    </section>
-
-
-    <div className='container'>
-    <div style={{width:'60%',margin:'10px auto',textAlign:'center',}}>
-
-<section>
-
-<button onClick={apirequest} style={{marginBottom:'10px'}}>Fetch Films</button>
-
-</section>
-<section>
-  {content}
-</section>
-    </div>
+    <Routes>
+    <Route path="/" element={<MainBody/>} />
+    <Route path="/about" element={<About/>} />
+        
      
+    </Routes>
+    
+      
+     
+      
+      
+        
+      </section>
+      
     </div>
-    </>
   )
 }
 
