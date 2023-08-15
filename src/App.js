@@ -48,11 +48,30 @@ useEffect(()=>{
 
   apirequest();
 
-},[apirequest]);
+}, [apirequest]);
+
+const submitEvent=(e)=>{
+  e.preventDefault();
+  const t1=title.current.value;
+  const ot1 = text.current.value;
+  const r1=rDate.current.value;
+  setShowData((prvData)=> [...prvData,{id:Math.random(),title:t1,openingText:ot1,releaseDate:r1}]);
+  title.current.value='';
+  text.current.value='';
+  rDate.current.value='';
+  
+    
+  }
+
+  const removeFn=(ele)=>{
+    const remove = showData.filter((e)=> e.id !==ele.id);
+    setShowData(remove)
+
+  }
  
-let content = <p>Found No Films</p>
+let content = <p>Found No Movies...</p>
 if(showData.length>0){
-content = <Body showData={showData}/>
+content = <Body style={{windth:'100%'}} removeFn={removeFn} showData={showData}/>
 
 }
 if(error){
@@ -61,15 +80,8 @@ if(error){
 if(isLoading){
    content=<h2>Loading.........</h2>
 }
-const submitEvent=(e)=>{
-e.preventDefault();
-const t1=title.current.value;
-const ot1 = text.current.value;
-const r1=rDate.current.value;
-setShowData((prvData)=>( [...prvData,{id:Math.random(),title:t1,openingText:ot1,releaseDate:r1}])
-)
-  
-}
+
+
 
   return (
     <>
