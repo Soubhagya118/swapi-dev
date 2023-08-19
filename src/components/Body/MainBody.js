@@ -1,4 +1,7 @@
-import React, { useEffect, useState, useCallback,useRef } from 'react';
+import React, { useEffect, useState, useCallback} from 'react';
+//  import {  collection, addDoc, getDocs, deleteDoc ,doc} from 'firebase/firestore/lite';
+//import db from '../firebaseConfig/StartFireBase';
+
 import Form from './Form';
 import { Route } from 'react-router-dom';
 import Body from './Body';
@@ -10,31 +13,26 @@ const [showData, setShowData] = useState([]);
 const [isLoading,setIsLoading] = useState(false);
 const [error,setError] = useState(null);
 
-const title=useRef();
-const text=useRef();
-const rDate= useRef();
-
- const apirequest = useCallback( async ()=>{
+ const apirequest = useCallback(async ()=>{
   setIsLoading(true);
   setError(null)
   try{
-  const response = await fetch('https://swapi.dev/api/films/');
-    if( !response.ok ){
-      throw new Error('....Retrying');
-    };
-    const data = await response.json();  
-    const filmsList=data.results.map((d)=>{
-      return {
-        id:d.episode_id,
-        title:d.title,
-        openingText:d.opening_crawl,
-        releaseDate:d.release_date,
-      }
-    });
-
-    
   
-    setShowData(filmsList);
+    const res= await fetch('https://crud-project-3283c-default-rtdb.firebaseio.com/products.json');
+   if(!res.ok){
+    throw new Error(".....error occure in get ")
+   }
+  const data = await res.json();
+  const fetchedItems =[];
+  for(let key in data){
+    fetchedItems.push({
+      id:key,
+      text:data[key].text,
+      title:data[key].title,
+      rDate:data[key].rDate
+    })
+  }
+    setShowData(fetchedItems);
     setError(null)
   
   }catch(err){
@@ -44,32 +42,54 @@ const rDate= useRef();
 
 
 },[]
-);
+ );
+// ======================= form handler function post api ==========================
 
-useEffect(()=>{
+async function AddProduct(showData){
+  try{
+const res= await fetch('https://crud-project-3283c-default-rtdb.firebaseio.com/products.json',{
+  method:'POST',
+  body:JSON.stringify(showData)
+});
 
-  apirequest();
+if(!res.ok){
+  throw new Error('.....error')
+}
 
-}, [apirequest]);
+const data = await res.json();
+apirequest()
 
-const submitEvent=(e)=>{
-  e.preventDefault();
-  const t1=title.current.value;
-  const ot1 = text.current.value;
-  const r1=rDate.current.value;
-  setShowData((prvData)=> [...prvData,{id:Math.random(),title:t1,openingText:ot1,releaseDate:r1}]);
-  title.current.value='';
-  text.current.value='';
-  rDate.current.value='';
+console.log("hello moto data",data);
+  }catch(err){
+    setError(err.message);
+  }
+}
+
+
   
     
-  }
+// ======================================= remove function ==============
 
-  const removeFn=(ele)=>{
-    const remove = showData.filter((e)=> e.id !==ele.id);
-    setShowData(remove)
+  async function removeFn(id){
+    try{
+      const res= await fetch(`https://crud-project-3283c-default-rtdb.firebaseio.com/products/${id}.json`,{
+        method:'DELETE'
+      })
+         apirequest()
 
-  }
+    }catch(err){
+      console.log("err",err)
+    }
+  };
+    
+
+  //====================================== USEEFFECT ========================
+  useEffect(()=>{
+  
+    apirequest();
+  
+  }, [apirequest]);
+  
  
 let content = <p>Found No Movies...</p>
 if(showData.length>0){
@@ -92,14 +112,14 @@ if(isLoading){
      {/* / <Route path='/home'> */}
      
       <section>
-      <Form submitEvent={submitEvent} text={text} rDate={rDate} title={title}/>
+      <Form submitEvent={AddProduct} />
 
 
     <div className='container'>
-    <div style={{width:'60%',margin:'10px auto',textAlign:'center',}}>
+    <div style={{width:'60%',margin:'10px auto',textAlign:'center',border:'1px solid black'}}>
 
     <section>
-    <button onClick={apirequest} style={{marginBottom:'10px'}}>Fetch Films</button>
+    <button onClick={apirequest} style={{marginBottom:'10px',marginLeft:'25px',marginTop:'10px'}}>Fetch Films</button>
     </section>
     <section>
       {content}
@@ -107,7 +127,7 @@ if(isLoading){
     </div>
     </div>
     </section>
-    {/* </Route> */}
+
     </>
   )
 }

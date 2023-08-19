@@ -1,6 +1,6 @@
 import React from 'react'
 import MainBody from './components/Body/MainBody'
-import { BrowserRouter,Routes,Route,Link } from 'react-router-dom'
+import { Routes,Route,Link } from 'react-router-dom'
 import About from './components/Body/About'
 
 const App = () => {
